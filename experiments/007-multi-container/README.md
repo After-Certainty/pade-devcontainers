@@ -1,6 +1,6 @@
 # Experiment 007 — multi-container Dev Container topology
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI proved process-scoped PADE Material in a real Compose-backed Dev Container does not become ambient state in the sibling service.
 
 ## Question
 
@@ -41,6 +41,18 @@ Sidecar service:
 - has no `GITHUB_TOKEN`;
 - has no PADE executable;
 - does not have the repository workspace mounted.
+
+## Observed result
+
+GitHub CI observed:
+
+- workspace ordinary shell Material: absent;
+- explicit PADE child Material: present;
+- sidecar-only environment marker in workspace: absent;
+- sibling sidecar Material: absent;
+- sibling sidecar workspace mount: absent.
+
+The Dev Containers CLI created the Compose project and the sidecar was inspected independently through Docker using that project identity.
 
 ## Claim boundary
 
