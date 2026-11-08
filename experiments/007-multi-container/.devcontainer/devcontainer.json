@@ -1,0 +1,8 @@
+{
+  "name": "pade-experiment-007",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/pade-devcontainers",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root"
+}

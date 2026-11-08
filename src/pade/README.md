@@ -7,7 +7,7 @@ It installs two helpers:
 - `pade-devcontainer-init`: atomically replaces the local PADE bindings path with a mode-`0600` empty binding set.
 - `pade-devcontainer-bind`: initializes fail-closed state, then invokes caller-owned `rc-pade bind` with a verified Profile, operator policy, allowlist, and broker binding.
 
-The Feature contributes `pade-devcontainer-init` as a native `postCreateCommand`.
+The Feature contributes `pade-devcontainer-init` as both a native `postCreateCommand` and `postStartCommand`. Every container start therefore begins from fail-closed empty bindings; a later trusted bind step must repopulate authority.
 
 ## Deliberate boundary
 

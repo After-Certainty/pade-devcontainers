@@ -1,0 +1,14 @@
+{
+  "name": "pade-experiment-008",
+  "image": "ubuntu:24.04",
+  "remoteUser": "root",
+  "features": {
+    "./features/pade": {}
+  },
+  "containerEnv": {
+    "PADE_BINDINGS_PATH": "/pade-state/bindings.yaml"
+  },
+  "mounts": [
+    "source=pade-exp008-state,target=/pade-state,type=volume"
+  ]
+}

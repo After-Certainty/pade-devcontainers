@@ -1,0 +1,78 @@
+name: Experiments 007-008
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+env:
+  PADE_COMMIT: 05fb0361c8af17c2031b2e3815d252d9cc49bdf7
+  DEVCONTAINER_CLI_VERSION: 0.90.0
+
+jobs:
+  experiment-007-multi-container:
+    name: "007 multi-container"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.10"
+          cache: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Build PADE v0.4.1
+        run: |
+          set -euo pipefail
+          mkdir -p .work/src .work/bin
+          curl -fsSL --retry 2             -o .work/pade.tar.gz             "https://github.com/After-Certainty/pade/archive/${PADE_COMMIT}.tar.gz"
+          tar -C .work/src -xzf .work/pade.tar.gz
+          PADE_DIR="$(find .work/src -mindepth 1 -maxdepth 1 -type d -name 'pade-*' | head -n1)"
+          test -n "$PADE_DIR"
+          (
+            cd "$PADE_DIR"
+            CGO_ENABLED=0 go build -trimpath               -o "$GITHUB_WORKSPACE/.work/bin/pade"               ./cmd/pade
+          )
+
+      - name: Start Compose-backed Dev Container
+        run: |
+          devcontainer up             --workspace-folder "$GITHUB_WORKSPACE"             --config "$GITHUB_WORKSPACE/experiments/007-multi-container/.devcontainer/devcontainer.json"             > "$GITHUB_WORKSPACE/.work/experiment-007-up.json"
+
+      - name: Verify workspace service
+        run: |
+          devcontainer exec             --workspace-folder "$GITHUB_WORKSPACE"             --config "$GITHUB_WORKSPACE/experiments/007-multi-container/.devcontainer/devcontainer.json"             bash experiments/007-multi-container/scripts/verify-workspace.sh
+
+      - name: Verify sibling sidecar
+        run: bash experiments/007-multi-container/scripts/verify-sidecar.sh
+
+  experiment-008-lifecycle:
+    name: "008 stale-state lifecycle"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Verify restart and recreate fail closed
+        run: bash experiments/008-lifecycle-stale-state/scripts/verify-lifecycle.sh
