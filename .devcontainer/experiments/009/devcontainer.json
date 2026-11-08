@@ -1,0 +1,11 @@
+{
+  "name": "pade-experiment-009",
+  "image": "ubuntu:24.04",
+  "remoteUser": "root",
+  "features": {
+    "./features/pade": {}
+  },
+  "containerEnv": {
+    "PADE_BINDINGS_PATH": "/tmp/pade-devcontainer-bindings.yaml"
+  }
+}
