@@ -1,6 +1,6 @@
 # Experiment 006 — independent capability consumers
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI proved independent read/write capability selection and explicit combined access inside the standard Dev Container.
 
 ## Question
 
@@ -36,6 +36,15 @@ The write child must:
 The combined child must receive both only because both capabilities were explicitly requested.
 
 Before and after all three executions, the ordinary Dev Container shell must have neither token.
+
+## Observed result
+
+GitHub CI observed:
+
+- read consumer → read Material only;
+- write consumer → write Material only;
+- combined consumer → both Materials only when both capabilities were explicitly selected;
+- ordinary Dev Container shell → neither Material before or after the PADE children.
 
 ## Why this matters
 
