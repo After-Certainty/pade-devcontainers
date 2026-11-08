@@ -1,6 +1,6 @@
 # Experiment 010 — OCI Feature packaging and clean consumption
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI packaged the Feature, published it to a disposable OCI registry, and installed it into a clean consumer pinned by digest.
 
 ## Question
 
@@ -49,6 +49,19 @@ The clean consumer:
 - starts with mode-`0600` empty bindings.
 
 The published manifest must use the Dev Container Feature layer media type.
+
+## Observed result
+
+GitHub CI observed:
+
+- collection package metadata valid;
+- published Feature digest: `sha256:7c6253b199daa5f56815e6649f0ba8f5e8ce04e16aa6c27b382c1d569fbd72ce`;
+- OCI manifest contained the Dev Container Feature layer media type;
+- clean consumer contained no copied local Feature source;
+- digest-pinned distributed Feature installed successfully;
+- native lifecycle created mode-`0600` fail-closed bindings.
+
+The digest is evidence for this exact CI-produced artifact, not a permanent release identifier.
 
 ## Claim boundary
 
