@@ -1,0 +1,64 @@
+name: Experiments 009-010
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+env:
+  DEVCONTAINER_CLI_VERSION: 0.90.0
+
+jobs:
+  experiment-009-engine-portability:
+    name: "009 engine (${{ matrix.engine }})"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        engine:
+          - docker
+          - podman
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Install Podman
+        if: matrix.engine == 'podman'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+          podman --version
+          podman info
+
+      - name: Verify engine portability
+        run: bash experiments/009-container-engine-portability/scripts/verify-engine.sh "${{ matrix.engine }}"
+
+  experiment-010-oci-distribution:
+    name: "010 OCI distribution"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Package, publish, and consume by digest
+        run: bash experiments/010-oci-feature-distribution/scripts/verify-distribution.sh
