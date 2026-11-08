@@ -3,7 +3,7 @@
   "image": "ubuntu:24.04",
   "remoteUser": "root",
   "features": {
-    "../../../src/pade": {}
+    "./features/pade": {}
   },
   "containerEnv": {
     "PADE_BINDINGS_PATH": "/pade-state/bindings.yaml"
