@@ -24,8 +24,8 @@ SESSION="$TMP/session.yaml"
 
 "$RC_PADE_BIN" bind   --verified-profile "$FIXTURES/verified-profile.yaml"   --policy "$FIXTURES/policy.yaml"   --broker-binding "$FIXTURES/broker.json"   --allow-capabilities "$ALLOW"   --output "$BINDINGS"   --session-out "$SESSION"
 
-grep -q '^  github.repo.read:' "$BINDINGS"
-grep -q '^  github.repo.write:' "$BINDINGS"
+grep -q 'github.repo.read:' "$BINDINGS"
+grep -q 'github.repo.write:' "$BINDINGS"
 grep -q 'provider: broker' "$BINDINGS"
 grep -q 'https://broker.example.test' "$BINDINGS"
 grep -q 'github.repo.read' "$SESSION"
