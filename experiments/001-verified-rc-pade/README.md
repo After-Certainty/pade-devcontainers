@@ -1,6 +1,6 @@
 # Experiment 001 — verified Runtime Conditions → rc-pade bind → Dev Container
 
-**Status:** Planned. This directory defines the first Dev Containers portability experiment and its deterministic CI harness. No live signed-handoff or broker provenance has been recorded yet.
+**Status:** In progress — deterministic Dev Container CI proof complete. GitHub Actions starts the standard Dev Container, runs the pinned `rc-pade bind` path inside it, verifies the expected GitHub read/write broker bindings, and proves fail-closed empty bindings on an insufficient allowlist. Live signed-handoff trust, workload identity, broker authorization, provider fulfillment, and rebuild/recreate provenance remain pending.
 
 ## Question
 
