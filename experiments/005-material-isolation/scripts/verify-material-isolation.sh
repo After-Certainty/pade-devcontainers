@@ -32,6 +32,8 @@ if printf '%s\n' "$caps" | grep -Fq "$TOKEN"; then
   exit 1
 fi
 
+# Variables in the child script intentionally expand inside the PADE child.
+# shellcheck disable=SC2016
 child_out="$(
   PADE_KSM_FAKE=1 KSM_CONFIG=synthetic-bootstrap-must-not-reach-child     "$PADE_BIN" exec       -f "$FIXTURES/pade.yaml"       --bindings "$FIXTURES/bindings.yaml"       --capability github.repo.read       --quiet --       /bin/sh -c '
         test "$GITHUB_TOKEN" = "pade-demo-ksm-token"
@@ -41,6 +43,8 @@ child_out="$(
 )"
 [[ "$child_out" == "child-isolated-ok" ]]
 
+# GITHUB_TOKEN intentionally expands only inside the PADE child.
+# shellcheck disable=SC2016
 redacted="$(
   PADE_KSM_FAKE=1 "$PADE_BIN" exec     -f "$FIXTURES/pade.yaml"     --bindings "$FIXTURES/bindings.yaml"     --capability github.repo.read     --quiet --     /bin/sh -c 'printf "%s" "$GITHUB_TOKEN"'
 )"
