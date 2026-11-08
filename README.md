@@ -60,6 +60,8 @@ The current experiment sequence is:
 - **004** — make required/optional and supported/unsupported behavior observable at the rc-pade platform-support boundary.
 - **005** — verify PADE Material is injected only into explicitly scoped child processes.
 - **006** — verify multiple processes can request independent capability sets without making Material ambient to the container.
+- **007** — verify a Compose-backed Dev Container keeps PADE Material out of sibling services.
+- **008** — verify restart/recreate lifecycle clears stale bindings even when the bindings path persists.
 
 ## CI
 
@@ -72,6 +74,6 @@ GitHub Actions verifies the deterministic part of Experiment 001 on every push a
 5. verify the expected GitHub read/write broker bindings;
 6. exercise an allowlist failure and confirm bindings are replaced with capabilities: {}.
 
-Additional CI jobs demonstrate Experiments 002–006 independently: Feature tests across clean base images, real pinned RC composition, a four-case support/optionality matrix, process-scoped Material isolation, and independent multi-capability consumers.
+Additional CI jobs demonstrate Experiments 002–008 independently: Feature tests, real RC composition, support/optionality behavior, process-scoped Material isolation, independent consumers, Compose sibling isolation, and restart/recreate stale-state handling.
 
 CI deliberately does **not** claim to prove the later live checkpoints: signed-handoff trust, cloud workload identity, broker authorization, or provider fulfillment. Those require explicit provenance from the live experiment.
