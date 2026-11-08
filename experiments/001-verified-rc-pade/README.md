@@ -1,6 +1,6 @@
 # Experiment 001 — verified Runtime Conditions → rc-pade bind → Dev Container
 
-**Status:** In progress — deterministic Dev Container CI proof complete. GitHub Actions starts the standard Dev Container, runs the pinned `rc-pade bind` path inside it, verifies the expected GitHub read/write broker bindings, and proves fail-closed empty bindings on an insufficient allowlist. Live signed-handoff trust, workload identity, broker authorization, provider fulfillment, and rebuild/recreate provenance remain pending.
+**Status:** Complete — deterministic Dev Container CI smoke remains green, and the live signed-handoff → GCE identity → deployed broker path was proven from the GCE-backed Coder outer host on 2026-11-08. See [Live result](#live-result) and [Coder provenance](../provenance/coder-2026-11-08/001.yaml).
 
 ## Question
 
@@ -247,17 +247,71 @@ trusted RC handoff
 
 with deterministic CI coverage for projection/binding and live provenance for trust, identity, authorization, fail-closed behavior, and fresh recreation.
 
+## Live result
+
+Recorded from the GCE-backed Coder outer host on **2026-11-08** (UTC). Coder hosted the run; the Dev Container path used only native Dev Containers CLI lifecycle and the reusable Feature. No Coder sync primitives were introduced.
+
+Durable evidence: [`../provenance/coder-2026-11-08/001.yaml`](../provenance/coder-2026-11-08/001.yaml), [`../provenance/coder-2026-11-08/environment.md`](../provenance/coder-2026-11-08/environment.md).
+
+### Pins
+
+| Artifact | Pin |
+|----------|-----|
+| rc-pade bind | `43226ef96ae09419b6253a6eb364fd44a0ac1305` |
+| rc-demos (handoff verifier) | `853eab3c2c04f9d1059b2dbd64ea91996828a3a9` |
+| go-rc-profiler | `5d2e860e48842b89ec83414123a7e59228f61d36` |
+| PADE | v0.4.1 (`05fb036`) |
+| Dev Containers CLI | `0.90.0` |
+| Profile SHA-256 (exact verified bytes) | `53fe0bca5664c9b889304c881d6643cec163f449a9d02a91fd5a6d635ad62e19` |
+| Bindings SHA-256 (read+write broker-only) | `4ce490e592a76c8a551951935a908c854d25f6a5b307faf57f123c829ee95743` |
+
+### Trust chain
+
+Public handoff fixtures under [`fixtures/handoff/`](fixtures/handoff/) (no private key):
+
+1. signature verified (`evidence.sig` over exact `evidence.json`);
+2. Profile digest verified;
+3. resolved-extension artifact digests verified;
+4. exact verified Profile written mode `0600`;
+5. `rc-pade bind` / `pade-devcontainer-bind` invoked only after verification.
+
+Corrupted-evidence negative: verification failed with `untrusted_handoff`; bind was not invoked on that path; bindings remained `capabilities: {}` mode `0600`; restoring the valid handoff recovered the live path.
+
+### Workload identity
+
+GCE metadata was reachable **from inside** the standard Dev Container on the **default bridge network** (no host-network workaround required).
+
+- Mechanism: GCE metadata `identity` endpoint (`identity: gce`)
+- Audience: selected from the operator live broker binding (not recorded here)
+- Issuer observed: `https://accounts.google.com`
+- Durable Google/GitHub/AWS credentials introduced: **false**
+- Raw JWT recorded: **false**
+
+### Live authorization
+
+| Capability | Result |
+|------------|--------|
+| `github.repo.read` | authorized — probe `After-Certainty/after-certainty` via Material in `pade exec` child only |
+| `github.repo.write` | broker-denied (HTTP 403) — child did not run |
+
+Ambient `GITHUB_TOKEN` / `GH_TOKEN` remained unset in the parent before and after.
+
+### Lifecycle
+
+| Transition | Result |
+|------------|--------|
+| Restart (stop/start, same container) | pass — Feature `postStart` cleared bindings; handoff re-verified; bind re-ran; read authorized / write denied |
+| Fresh recreate (new container) | pass — chain regenerated from trusted public inputs + runtime operator broker config under `.work/` |
+
+Previously generated bindings were not treated as trusted persistent authority.
+
+### Limitations
+
+- Verifier → workspace-local `verified-profile.yaml` → later `rc-pade` reopen is **orchestration ordering**, not a tamper-resistant security boundary (same-user TOCTOU remains).
+- The experimental signed-handoff format is **reused**, not made normative.
+- Coder is the **outer host** for this provenance trail. This does not prove Codespaces/DevPod portability.
+- Live broker URL remains operator-private for this repository (`endpointRecorded: false`).
+
 ## Suggested Cursor workflow
 
-Work through this README checkpoint by checkpoint.
-
-Start with **Checkpoint 1 only**. For each checkpoint:
-
-1. inspect the current repository and upstream pinned implementations;
-2. report assumptions that differ from this runbook;
-3. propose the smallest native Dev Container change;
-4. state the evidence and stop condition;
-5. implement only after agreement;
-6. record actual results before moving on.
-
-Do not make the integration look like Coder merely because Coder was the first proven environment.
+Historical checkpoint sequencing for this experiment is complete. For future related work, keep the same rule: do not make the integration look like Coder merely because Coder was the first proven environment.
