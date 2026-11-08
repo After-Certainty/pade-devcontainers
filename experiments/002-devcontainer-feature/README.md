@@ -1,6 +1,6 @@
 # Experiment 002 — reusable Dev Container Feature
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — reusable Feature CI proof passed on Ubuntu 24.04 and Debian bookworm-slim with Dev Containers CLI 0.90.0.
 
 ## Question
 
@@ -46,6 +46,10 @@ The test requires:
 3. initialization produces mode-`0600` `capabilities: {}`;
 4. stale bindings are replaced before a bind attempt;
 5. if caller-owned `rc-pade` is unavailable, bind fails and the local bindings remain empty.
+
+## Observed result
+
+GitHub CI successfully installed and exercised the local `pade` Feature on both tested base images. The native `postCreateCommand` initialized the default fail-closed bindings path, the test override produced the same empty mode-`0600` state, and an attempted bind without caller-owned `rc-pade` failed without preserving stale authority.
 
 ## What success proves
 
