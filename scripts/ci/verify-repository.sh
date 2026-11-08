@@ -6,6 +6,8 @@ EXP1="$ROOT/experiments/001-verified-rc-pade"
 EXP2="$ROOT/experiments/002-devcontainer-feature"
 EXP3="$ROOT/experiments/003-composed-demand"
 EXP4="$ROOT/experiments/004-support-semantics"
+EXP5="$ROOT/experiments/005-material-isolation"
+EXP6="$ROOT/experiments/006-multiple-consumers"
 
 required=(
   "$ROOT/README.md"
@@ -13,6 +15,7 @@ required=(
   "$ROOT/.devcontainer/devcontainer.json"
   "$ROOT/.github/workflows/experiment-001.yml"
   "$ROOT/.github/workflows/experiments-002-004.yml"
+  "$ROOT/.github/workflows/experiments-005-006.yml"
   "$ROOT/src/pade/devcontainer-feature.json"
   "$ROOT/src/pade/install.sh"
   "$ROOT/test/pade/test.sh"
@@ -32,6 +35,14 @@ required=(
   "$EXP4/fixtures/policy-unsupported.yaml"
   "$EXP4/fixtures/broker.json"
   "$EXP4/scripts/verify-support-semantics.sh"
+  "$EXP5/README.md"
+  "$EXP5/fixtures/pade.yaml"
+  "$EXP5/fixtures/bindings.yaml"
+  "$EXP5/scripts/verify-material-isolation.sh"
+  "$EXP6/README.md"
+  "$EXP6/fixtures/pade.yaml"
+  "$EXP6/fixtures/bindings.yaml"
+  "$EXP6/scripts/verify-multiple-consumers.sh"
 )
 
 for path in "${required[@]}"; do
@@ -47,7 +58,7 @@ import sys
 
 for path in sys.argv[1:]:
     with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+        json.load(f)
     print(f"json_ok={path}")
 
 with open(sys.argv[2], "r", encoding="utf-8") as f:
@@ -60,9 +71,9 @@ assert feature["postCreateCommand"] == "pade-devcontainer-init"
 print("feature_metadata=pass")
 PY
 
-shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"
+shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"
 
-if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"; then
+if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"; then
   echo "Coder-specific orchestration leaked into executable Dev Container integration" >&2
   exit 1
 fi
@@ -75,5 +86,10 @@ grep -q 'provider: github' "$EXP1/fixtures/verified-profile.yaml"
 grep -q '853eab3c2c04f9d1059b2dbd64ea91996828a3a9' "$EXP3/README.md"
 grep -q 'required: false' "$EXP4/README.md"
 grep -q 'unsupported + optional' "$EXP4/README.md"
+
+grep -q '05fb036' "$EXP5/README.md"
+grep -q 'keeper://pade-demo-github' "$EXP5/fixtures/bindings.yaml"
+grep -q 'github.repo.read' "$EXP6/fixtures/pade.yaml"
+grep -q 'github.repo.write' "$EXP6/fixtures/pade.yaml"
 
 echo "repository_contract=pass"

@@ -1,0 +1,10 @@
+apiVersion: pade.local/v1alpha1
+kind: DevelopmentSession
+metadata:
+  name: devcontainer-multiple-consumers
+spec:
+  capabilities:
+    github.repo.read:
+      access: read
+    github.repo.write:
+      access: write
