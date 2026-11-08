@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Container-shell variables intentionally expand only inside the selected engine.
+# shellcheck disable=SC2016
 set -euo pipefail
 
 if [[ "$#" -ne 1 ]]; then
