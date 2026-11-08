@@ -31,7 +31,7 @@ curl -fsS "http://$REGISTRY/v2/" >/dev/null
 
 devcontainer features package   "$ROOT/src"   --output-folder "$PACKAGE_DIR"   --force-clean-output-folder
 
-test -f "$PACKAGE_DIR/pade.tgz"
+test -f "$PACKAGE_DIR/devcontainer-feature-pade.tgz"
 test -f "$PACKAGE_DIR/devcontainer-collection.json"
 
 python3 - "$PACKAGE_DIR/devcontainer-collection.json" <<'PY'
