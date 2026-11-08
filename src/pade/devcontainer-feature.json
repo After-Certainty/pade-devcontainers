@@ -1,0 +1,14 @@
+{
+  "id": "pade",
+  "version": "0.1.0",
+  "name": "PADE Dev Container Integration",
+  "description": "Installs the environment-native PADE binding lifecycle helpers used by pade-devcontainers experiments.",
+  "documentationURL": "https://github.com/After-Certainty/pade-devcontainers/tree/main/src/pade",
+  "keywords": [
+    "pade",
+    "runtime-conditions",
+    "credentials",
+    "capabilities"
+  ],
+  "postCreateCommand": "pade-devcontainer-init"
+}
