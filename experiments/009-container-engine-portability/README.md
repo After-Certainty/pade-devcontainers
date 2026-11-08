@@ -1,6 +1,6 @@
 # Experiment 009 — container-engine portability
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI proved the same Feature/config lifecycle on Docker and Podman through Dev Containers CLI 0.90.0.
 
 ## Question
 
@@ -28,6 +28,16 @@ For each engine CI requires:
 - native lifecycle initialization creates fail-closed `capabilities: {}`;
 - the bindings file is mode `0600`;
 - no engine-specific Feature source or PADE semantic configuration is used.
+
+## Observed result
+
+GitHub CI observed:
+
+- Docker → Feature install passed; fail-closed bindings passed;
+- Podman 4.9.3 → Feature install passed; fail-closed bindings passed;
+- both used the same `devcontainer.json` and the same staged Feature bytes.
+
+No PADE or Runtime Conditions semantic branch was introduced for either engine.
 
 ## Claim boundary
 
