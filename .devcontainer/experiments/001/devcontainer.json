@@ -1,0 +1,13 @@
+{
+  "name": "pade-experiment-001-live",
+  "image": "ubuntu:24.04",
+  "remoteUser": "root",
+  "overrideCommand": true,
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "./features/pade": {}
+  },
+  "containerEnv": {
+    "PADE_BINDINGS_PATH": "/tmp/pade-exp001/bindings.yaml"
+  }
+}

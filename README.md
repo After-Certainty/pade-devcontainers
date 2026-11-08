@@ -54,7 +54,7 @@ See [experiments/](experiments/).
 
 The current experiment sequence is:
 
-- **001** — prove the post-trust rc-pade binding path executes inside a standard Dev Container.
+- **001** — prove verified Runtime Conditions handoff → rc-pade bind → PADE → live broker inside a standard Dev Container (CI smoke + Coder-hosted live provenance).
 - **002** — package the environment lifecycle adapter as a reusable native Dev Container Feature.
 - **003** — run the real Runtime Conditions composer and keep application demand separate from wrapper-owned Dev Container demand.
 - **004** — make required/optional and supported/unsupported behavior observable at the rc-pade platform-support boundary.
@@ -78,4 +78,4 @@ GitHub Actions verifies the deterministic part of Experiment 001 on every push a
 
 Additional CI jobs demonstrate Experiments 002–010 independently: Feature tests, real RC composition, support/optionality behavior, process-scoped Material isolation, independent consumers, Compose sibling isolation, restart/recreate stale-state handling, container-engine portability, and OCI Feature distribution.
 
-CI deliberately does **not** claim to prove the later live checkpoints: signed-handoff trust, cloud workload identity, broker authorization, or provider fulfillment. Those require explicit provenance from the live experiment.
+CI deliberately does **not** claim to prove live signed-handoff trust, cloud workload identity, broker authorization, or provider fulfillment. Those are recorded as Coder-hosted provenance under [`experiments/provenance/`](experiments/provenance/) when executed from the GCE-backed Coder outer host.

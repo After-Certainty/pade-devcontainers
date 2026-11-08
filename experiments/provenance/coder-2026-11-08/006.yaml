@@ -1,0 +1,24 @@
+experiment: "006"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  padeVersion: "v0.4.1"
+  padeCommit: "05fb036"
+  padeKsmFake: true
+
+observations:
+  readConsumer: read_only
+  writeConsumer: write_only
+  combinedConsumer: explicit_both
+  ordinaryShell: none
+
+claims:
+  - "read consumer → read only"
+  - "write consumer → write only"
+  - "combined consumer → both explicitly selected"
+  - "ordinary shell → neither"
+
+limitations:
+  - "additional Coder-host provenance only"

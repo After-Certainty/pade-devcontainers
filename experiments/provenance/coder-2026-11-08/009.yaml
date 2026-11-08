@@ -1,0 +1,29 @@
+experiment: "009"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  enginesAttempted:
+    - docker
+    - podman
+
+observations:
+  docker:
+    version: "20.10.24+dfsg1"
+    featureInstall: pass
+    failClosedBindings: pass
+  podman:
+    version: "4.3.1"
+    available: true
+    featureInstall: fail
+    failureClass: host_cgroup_systemd_linger
+
+claims:
+  - "Feature lifecycle unchanged through Docker on this Coder host"
+  - "Podman is installed but rootless build failed due to host cgroup/systemd linger constraints"
+
+limitations:
+  - "does not mutate PADE semantics to accommodate an engine"
+  - "Podman unavailable for a full pass on this Coder host; recorded as environment finding"
+  - "does not claim Codespaces/DevPod/Desktop portability"
