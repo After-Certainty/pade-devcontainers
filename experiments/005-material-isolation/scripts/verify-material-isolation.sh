@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Child-shell snippets intentionally defer capability variable expansion.
+# shellcheck disable=SC2016
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
