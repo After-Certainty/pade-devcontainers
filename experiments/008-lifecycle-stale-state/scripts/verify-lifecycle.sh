@@ -4,9 +4,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-CONFIG="$ROOT/experiments/008-lifecycle-stale-state/.devcontainer/devcontainer.json"
+CONFIG="$ROOT/.devcontainer/experiments/008/devcontainer.json"
 VOLUME="pade-exp008-state"
-STAGED_FEATURE="$ROOT/experiments/008-lifecycle-stale-state/.devcontainer/features/pade"
+STAGED_FEATURE="$ROOT/.devcontainer/experiments/008/features/pade"
 
 rm -rf "$STAGED_FEATURE"
 mkdir -p "$STAGED_FEATURE"
