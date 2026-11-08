@@ -1,6 +1,6 @@
 # Experiment 003 — application + dev-container demand composition
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — the real pinned rc-demos composer passed in GitHub CI; the application Profile remained byte-identical and composition provenance assertions passed.
 
 ## Question
 
@@ -31,6 +31,14 @@ The composed Dev Container Profile:
 - records application and wrapper contributions in a separate provenance artifact.
 
 CI also hashes the application Profile before and after composition and requires the bytes to be unchanged.
+
+## Observed result
+
+The CI run produced a composed Profile with `content-api`, `site-analytics`, and wrapper-owned `application-source`, while the input application Profile retained only its application-owned Conditions and its original workload URI. The application Profile SHA-256 before and after composition was:
+
+`1175152793691ad5812b873019adb18f3f98eeb68cdd7a7670c137c2ad298c4e`
+
+The separate composition provenance attributed `content-api` and `site-analytics` to the application Profile and `application-source` to wrapper additions.
 
 ## Claim boundary
 
