@@ -19,7 +19,7 @@ Because `pade-devcontainers` owns environment lifecycle orchestration, this expe
 The experiment uses:
 
 - a standard Ubuntu Dev Container;
-- an exact staged copy of the local `src/pade` Feature under the experiment's `.devcontainer` tree, as required by Dev Containers local-Feature path rules;
+- an exact staged copy of the local `src/pade` Feature under the repository root `.devcontainer/experiments/008` tree, as required by Dev Containers local-Feature path rules;
 - `PADE_BINDINGS_PATH=/pade-state/bindings.yaml`;
 - a named Docker volume mounted at `/pade-state`.
 
