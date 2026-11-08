@@ -10,5 +10,6 @@
     "credentials",
     "capabilities"
   ],
-  "postCreateCommand": "pade-devcontainer-init"
+  "postCreateCommand": "pade-devcontainer-init",
+  "postStartCommand": "pade-devcontainer-init"
 }
