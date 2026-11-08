@@ -1,6 +1,6 @@
 # Experiment 008 — restart/recreate stale-state lifecycle
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI proved stale persistent bindings are cleared on same-container restart and fresh container recreation.
 
 ## Question
 
@@ -54,6 +54,18 @@ mode 0600
 ```
 
 A later trusted bind step may repopulate the file. Restarting the environment must not silently preserve that prior authority.
+
+## Observed result
+
+GitHub CI observed:
+
+- stopped container was reused on restart;
+- restart cleared deliberately stale bindings;
+- fresh recreation produced a new container;
+- stale bindings retained on the named volume were cleared again on recreation;
+- the resulting empty bindings remained mode `0600`.
+
+This required moving the experiment-local Feature under the repository root `.devcontainer` tree to satisfy Dev Containers local-Feature path rules.
 
 ## Claim boundary
 
