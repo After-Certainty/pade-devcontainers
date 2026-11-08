@@ -122,6 +122,7 @@ grep -q 'pade-exp008-state' "$ROOT/.devcontainer/experiments/008/devcontainer.js
 grep -q './features/pade' "$ROOT/.devcontainer/experiments/009/devcontainer.json"
 grep -q -- '--docker-path' "$EXP9/scripts/verify-engine.sh"
 grep -q 'features publish' "$EXP10/scripts/verify-distribution.sh"
-grep -q 'pade@\$digest' "$EXP10/scripts/verify-distribution.sh"
+grep -q 'pade@' "$EXP10/scripts/verify-distribution.sh"
+grep -q 'published_digest=' "$EXP10/scripts/verify-distribution.sh"
 
 echo "repository_contract=pass"
