@@ -1,0 +1,100 @@
+name: Experiments 002-004
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+env:
+  DEVCONTAINER_CLI_VERSION: 0.90.0
+  RC_DEMOS_COMMIT: 853eab3c2c04f9d1059b2dbd64ea91996828a3a9
+  RC_PADE_COMMIT: 43226ef96ae09419b6253a6eb364fd44a0ac1305
+
+jobs:
+  experiment-002-feature:
+    name: "002 Feature (${{ matrix.base_image }})"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base_image:
+          - ubuntu:24.04
+          - debian:bookworm-slim
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Test local PADE Feature
+        run: |
+          devcontainer features test             --skip-scenarios             -f pade             -i "${{ matrix.base_image }}"             .
+
+  experiment-003-composition:
+    name: "003 RC composition"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.0"
+          cache: false
+
+      - name: Install YAML assertion support
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-yaml
+
+      - name: Fetch pinned rc-demos
+        run: |
+          set -euo pipefail
+          mkdir -p .work/rc-demos
+          curl -fsSL --retry 2             "https://github.com/runtimeconditions/rc-demos/archive/${RC_DEMOS_COMMIT}.tar.gz"             | tar -xz --strip-components=1 -C .work/rc-demos
+
+      - name: Run real composition proof
+        env:
+          RC_DEMOS_ROOT: ${{ github.workspace }}/.work/rc-demos
+        run: bash experiments/003-composed-demand/scripts/verify-composition.sh
+
+  experiment-004-support-semantics:
+    name: "004 support semantics"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.10"
+          cache: false
+
+      - name: Install YAML assertion support
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-yaml
+
+      - name: Build pinned rc-pade
+        run: |
+          set -euo pipefail
+          mkdir -p .work/src .work/bin
+          curl -fsSL --retry 2             -o .work/rc-pade.tar.gz             "https://github.com/After-Certainty/rc-pade/archive/${RC_PADE_COMMIT}.tar.gz"
+          tar -C .work/src -xzf .work/rc-pade.tar.gz
+          RC_PADE_DIR="$(find .work/src -mindepth 1 -maxdepth 1 -type d -name 'rc-pade-*' | head -n1)"
+          test -n "$RC_PADE_DIR"
+          (
+            cd "$RC_PADE_DIR"
+            CGO_ENABLED=0 go build -trimpath               -o "$GITHUB_WORKSPACE/.work/bin/rc-pade"               ./cmd/rc-pade
+          )
+
+      - name: Run support semantics matrix
+        run: bash experiments/004-support-semantics/scripts/verify-support-semantics.sh

@@ -1,0 +1,8 @@
+{
+  "provider": "broker",
+  "broker": {
+    "endpoint": "https://broker.example.test",
+    "audience": "example-audience",
+    "identity": "gce"
+  }
+}
