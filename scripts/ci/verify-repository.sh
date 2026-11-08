@@ -54,7 +54,7 @@ required=(
   "$EXP7/scripts/verify-workspace.sh"
   "$EXP7/scripts/verify-sidecar.sh"
   "$EXP8/README.md"
-  "$EXP8/.devcontainer/devcontainer.json"
+  "$ROOT/.devcontainer/experiments/008/devcontainer.json"
   "$EXP8/scripts/verify-lifecycle.sh"
 )
 
@@ -65,7 +65,7 @@ for path in "${required[@]}"; do
   fi
 done
 
-python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json"   "$EXP7/.devcontainer/devcontainer.json"   "$EXP8/.devcontainer/devcontainer.json" <<'PY'
+python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json"   "$EXP7/.devcontainer/devcontainer.json"   "$ROOT/.devcontainer/experiments/008/devcontainer.json" <<'PY'
 import json
 import sys
 
@@ -109,6 +109,6 @@ grep -q 'github.repo.write' "$EXP6/fixtures/pade.yaml"
 grep -q 'dockerComposeFile' "$EXP7/.devcontainer/devcontainer.json"
 grep -q 'SIDECAR_MARKER' "$EXP7/.devcontainer/docker-compose.yml"
 grep -q 'postStartCommand' "$ROOT/src/pade/devcontainer-feature.json"
-grep -q 'pade-exp008-state' "$EXP8/.devcontainer/devcontainer.json"
+grep -q 'pade-exp008-state' "$ROOT/.devcontainer/experiments/008/devcontainer.json"
 
 echo "repository_contract=pass"
