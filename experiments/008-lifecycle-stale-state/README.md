@@ -19,11 +19,13 @@ Because `pade-devcontainers` owns environment lifecycle orchestration, this expe
 The experiment uses:
 
 - a standard Ubuntu Dev Container;
-- the local `src/pade` Feature;
+- an exact staged copy of the local `src/pade` Feature under the experiment's `.devcontainer` tree, as required by Dev Containers local-Feature path rules;
 - `PADE_BINDINGS_PATH=/pade-state/bindings.yaml`;
 - a named Docker volume mounted at `/pade-state`.
 
-CI executes:
+Before startup, CI copies `src/pade/devcontainer-feature.json` and `src/pade/install.sh` into the experiment-local Feature directory and verifies the staged bytes match the maintained source.
+
+CI then executes:
 
 1. first container creation;
 2. writes deliberately stale capability state;
