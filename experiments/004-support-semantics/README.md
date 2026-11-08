@@ -1,6 +1,6 @@
 # Experiment 004 — required, optional, and unsupported demand
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete with finding — the four-case GitHub CI matrix passed. Supported optional demand becomes `required: false`; unsupported optional demand currently fails closed just like unsupported required demand.
 
 ## Question
 
@@ -39,6 +39,17 @@ This isolates **platform mapping support** from the Profile's trust/validation s
 The fourth row is an **architectural finding**, not a declaration that optional unsupported demand should normatively fail.
 
 Current rc-pade performs top-level policy matching before optionality affects the projected capability, so an unmapped optional Condition has no separate continue/report path.
+
+## Observed result
+
+GitHub CI observed:
+
+- supported required → bind success, `required: true`;
+- supported optional → bind success, `required: false`;
+- unsupported required → rc-pade exit 1, bindings fail closed;
+- unsupported optional → rc-pade exit 1, bindings fail closed.
+
+The last row is the experiment's substantive finding. It identifies a missing semantic distinction rather than silently resolving it in this integration repository.
 
 ## Why this matters
 
