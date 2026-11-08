@@ -1,0 +1,12 @@
+services:
+  workspace:
+    image: ubuntu:24.04
+    command: sleep infinity
+    volumes:
+      - ../../..:/workspaces/pade-devcontainers:cached
+
+  sidecar:
+    image: ubuntu:24.04
+    command: sleep infinity
+    environment:
+      SIDECAR_MARKER: isolated
