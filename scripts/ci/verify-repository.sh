@@ -10,6 +10,8 @@ EXP5="$ROOT/experiments/005-material-isolation"
 EXP6="$ROOT/experiments/006-multiple-consumers"
 EXP7="$ROOT/experiments/007-multi-container"
 EXP8="$ROOT/experiments/008-lifecycle-stale-state"
+EXP9="$ROOT/experiments/009-container-engine-portability"
+EXP10="$ROOT/experiments/010-oci-feature-distribution"
 
 required=(
   "$ROOT/README.md"
@@ -19,6 +21,7 @@ required=(
   "$ROOT/.github/workflows/experiments-002-004.yml"
   "$ROOT/.github/workflows/experiments-005-006.yml"
   "$ROOT/.github/workflows/experiments-007-008.yml"
+  "$ROOT/.github/workflows/experiments-009-010.yml"
   "$ROOT/src/pade/devcontainer-feature.json"
   "$ROOT/src/pade/install.sh"
   "$ROOT/test/pade/test.sh"
@@ -56,6 +59,11 @@ required=(
   "$EXP8/README.md"
   "$ROOT/.devcontainer/experiments/008/devcontainer.json"
   "$EXP8/scripts/verify-lifecycle.sh"
+  "$EXP9/README.md"
+  "$ROOT/.devcontainer/experiments/009/devcontainer.json"
+  "$EXP9/scripts/verify-engine.sh"
+  "$EXP10/README.md"
+  "$EXP10/scripts/verify-distribution.sh"
 )
 
 for path in "${required[@]}"; do
@@ -65,7 +73,7 @@ for path in "${required[@]}"; do
   fi
 done
 
-python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json"   "$EXP7/.devcontainer/devcontainer.json"   "$ROOT/.devcontainer/experiments/008/devcontainer.json" <<'PY'
+python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json"   "$EXP7/.devcontainer/devcontainer.json"   "$ROOT/.devcontainer/experiments/008/devcontainer.json"   "$ROOT/.devcontainer/experiments/009/devcontainer.json" <<'PY'
 import json
 import sys
 
@@ -85,9 +93,9 @@ assert feature["postStartCommand"] == "pade-devcontainer-init"
 print("feature_metadata=pass")
 PY
 
-shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"
+shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"   "$EXP9/scripts/verify-engine.sh"   "$EXP10/scripts/verify-distribution.sh"
 
-if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"; then
+if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"   "$EXP9/scripts/verify-engine.sh"   "$EXP10/scripts/verify-distribution.sh"; then
   echo "Coder-specific orchestration leaked into executable Dev Container integration" >&2
   exit 1
 fi
@@ -110,5 +118,10 @@ grep -q 'dockerComposeFile' "$EXP7/.devcontainer/devcontainer.json"
 grep -q 'SIDECAR_MARKER' "$EXP7/.devcontainer/docker-compose.yml"
 grep -q 'postStartCommand' "$ROOT/src/pade/devcontainer-feature.json"
 grep -q 'pade-exp008-state' "$ROOT/.devcontainer/experiments/008/devcontainer.json"
+
+grep -q './features/pade' "$ROOT/.devcontainer/experiments/009/devcontainer.json"
+grep -q -- '--docker-path' "$EXP9/scripts/verify-engine.sh"
+grep -q 'features publish' "$EXP10/scripts/verify-distribution.sh"
+grep -q 'pade@\$digest' "$EXP10/scripts/verify-distribution.sh"
 
 echo "repository_contract=pass"
