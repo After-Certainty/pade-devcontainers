@@ -1,0 +1,17 @@
+apiVersion: rc-pade.local/v1alpha1
+kind: ProjectionPolicy
+rules:
+  - match:
+      kind: source_control
+      interfaceType: git
+    require:
+      - path: interface.provider
+        equals: github
+    project:
+      - when:
+          - path: interface.access
+            contains: fetch
+        capability: github.repo.read
+        access: read
+    cover:
+      - interface.access
