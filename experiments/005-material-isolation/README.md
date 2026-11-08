@@ -1,6 +1,6 @@
 # Experiment 005 — process-scoped Material isolation
 
-**Status:** Implemented in this PR; GitHub CI evidence pending.
+**Status:** Complete — GitHub CI proved process-scoped synthetic Material inside the standard Dev Container with PADE v0.4.1.
 
 ## Question
 
@@ -37,6 +37,17 @@ After the child exits:
 - the ordinary shell still has no `GITHUB_TOKEN`;
 - a subsequent ordinary child has no `GITHUB_TOKEN`;
 - bindings remain configuration-only and contain no Material.
+
+## Observed result
+
+GitHub CI observed:
+
+- ordinary Dev Container shell Material: absent;
+- PADE child Material: present only for the selected capability;
+- post-exec ordinary process Material: absent;
+- exact child stdout Material: redacted.
+
+The child also did not inherit the synthetic KSM bootstrap value supplied to PADE, and the checked-in bindings remained reference-only configuration.
 
 ## Claim boundary
 
