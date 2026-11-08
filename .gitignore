@@ -1,2 +1,6 @@
 .work/
 .DS_Store
+
+# Staged local Feature copies created by experiment scripts
+.devcontainer/experiments/*/features/
+.devcontainer/experiments/*/devcontainer-lock.json
