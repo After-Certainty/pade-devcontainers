@@ -1,0 +1,3 @@
+apiVersion: rc-pade.local/v1alpha1
+kind: ProjectionPolicy
+rules: []
