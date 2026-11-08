@@ -45,10 +45,7 @@ required=(
   "$EXP6/README.md"
   "$EXP6/fixtures/pade.yaml"
   "$EXP6/fixtures/bindings.yaml"
-  "$EXP6/scripts/verify-multiple-consumers.sh" \
-  "$EXP7/scripts/verify-workspace.sh" \
-  "$EXP7/scripts/verify-sidecar.sh" \
-  "$EXP8/scripts/verify-lifecycle.sh"
+  "$EXP6/scripts/verify-multiple-consumers.sh"
   "$EXP7/README.md"
   "$EXP7/.devcontainer/devcontainer.json"
   "$EXP7/.devcontainer/docker-compose.yml"
@@ -68,7 +65,7 @@ for path in "${required[@]}"; do
   fi
 done
 
-python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json" <<'PY'
+python3 -   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/devcontainer-feature.json"   "$EXP1/fixtures/broker.json"   "$EXP4/fixtures/broker.json"   "$EXP7/.devcontainer/devcontainer.json"   "$EXP8/.devcontainer/devcontainer.json" <<'PY'
 import json
 import sys
 
@@ -88,12 +85,9 @@ assert feature["postStartCommand"] == "pade-devcontainer-init"
 print("feature_metadata=pass")
 PY
 
-shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"
+shellcheck   "$ROOT/scripts/ci/verify-repository.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"
 
-if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh" \
-  "$EXP7/scripts/verify-workspace.sh" \
-  "$EXP7/scripts/verify-sidecar.sh" \
-  "$EXP8/scripts/verify-lifecycle.sh"; then
+if grep -n -E 'coder exp sync|module\.pade|modules/rc-pade-bindings'   "$ROOT/.devcontainer/devcontainer.json"   "$ROOT/src/pade/install.sh"   "$EXP1/scripts/verify-bind.sh"   "$EXP3/scripts/verify-composition.sh"   "$EXP4/scripts/verify-support-semantics.sh"   "$EXP5/scripts/verify-material-isolation.sh"   "$EXP6/scripts/verify-multiple-consumers.sh"   "$EXP7/scripts/verify-workspace.sh"   "$EXP7/scripts/verify-sidecar.sh"   "$EXP8/scripts/verify-lifecycle.sh"; then
   echo "Coder-specific orchestration leaked into executable Dev Container integration" >&2
   exit 1
 fi
@@ -111,7 +105,9 @@ grep -q '05fb036' "$EXP5/README.md"
 grep -q 'keeper://pade-demo-github' "$EXP5/fixtures/bindings.yaml"
 grep -q 'github.repo.read' "$EXP6/fixtures/pade.yaml"
 grep -q 'github.repo.write' "$EXP6/fixtures/pade.yaml"
+
 grep -q 'dockerComposeFile' "$EXP7/.devcontainer/devcontainer.json"
+grep -q 'SIDECAR_MARKER' "$EXP7/.devcontainer/docker-compose.yml"
 grep -q 'postStartCommand' "$ROOT/src/pade/devcontainer-feature.json"
 grep -q 'pade-exp008-state' "$EXP8/.devcontainer/devcontainer.json"
 
