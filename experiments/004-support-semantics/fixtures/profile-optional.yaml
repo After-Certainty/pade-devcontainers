@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+  name: devcontainer-source-optional
+workload:
+  uri: https://github.com/After-Certainty/pade-devcontainers#experiment-004
+  version: demo
+conditions:
+  - name: application-source
+    optional: true
+    kind: source_control
+    interface:
+      type: git
+      provider: github
+      access:
+        - fetch
