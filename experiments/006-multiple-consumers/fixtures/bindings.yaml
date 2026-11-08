@@ -1,0 +1,12 @@
+version: "0.1"
+capabilities:
+  github.repo.read:
+    provider: keeper-secrets-manager
+    keeperSecretsManager:
+      refs:
+        GITHUB_READ_TOKEN: "keeper://pade-demo-alice-github/field/password"
+  github.repo.write:
+    provider: keeper-secrets-manager
+    keeperSecretsManager:
+      refs:
+        GITHUB_WRITE_TOKEN: "keeper://pade-demo-bob-github/field/password"
