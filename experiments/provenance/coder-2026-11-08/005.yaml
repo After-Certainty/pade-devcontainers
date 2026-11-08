@@ -1,0 +1,25 @@
+experiment: "005"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  padeVersion: "v0.4.1"
+  padeCommit: "05fb036"
+  padeKsmFake: true
+
+observations:
+  ordinaryShellMaterialAbsent: true
+  padeChildMaterialPresent: true
+  postExecMaterialAbsent: true
+  exactStdoutMaterialRedacted: true
+
+claims:
+  - "ordinary shell Material absent"
+  - "PADE child Material present"
+  - "post-exec Material absent"
+  - "stdout exact Material redacted"
+
+limitations:
+  - "synthetic KSM Material only; never commits live credentials"
+  - "additional Coder-host provenance only"

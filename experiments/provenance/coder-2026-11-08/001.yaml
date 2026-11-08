@@ -1,0 +1,61 @@
+experiment: "001"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  rcPadeCommit: "43226ef96ae09419b6253a6eb364fd44a0ac1305"
+  rcDemosCommit: "853eab3c2c04f9d1059b2dbd64ea91996828a3a9"
+  goRcProfilerCommit: "5d2e860e48842b89ec83414123a7e59228f61d36"
+  padeVersion: "v0.4.1"
+  padeCommit: "05fb036"
+  handoffProfileSha256: "53fe0bca5664c9b889304c881d6643cec163f449a9d02a91fd5a6d635ad62e19"
+  trustedPubSha256: "2cf313dcc7b0733cdc164e8066dc8aff7134226ba64ed25f63bc48229b7749b6"
+  bindingsSha256: "4ce490e592a76c8a551951935a908c854d25f6a5b307faf57f123c829ee95743"
+
+trust:
+  signedHandoffVerified: true
+  profileDigestVerified: true
+  resolvedArtifactDigestsVerified: true
+  privateSigningKeyAbsent: true
+  corruptedHandoffFailsBeforeBind: true
+  recoveryAfterRestore: true
+
+identity:
+  mechanism: gce
+  metadataReachableFromDevContainer: true
+  networkMode: default
+  audienceSelectedFromBrokerBinding: true
+  durableCredentialsIntroduced: false
+  rawTokenRecorded: false
+
+broker:
+  liveAuthorizationTested: true
+  endpointRecorded: false
+  identity: gce
+
+authorization:
+  githubRepoRead: authorized
+  githubRepoReadProbe: "After-Certainty/after-certainty"
+  githubRepoWrite: denied
+  githubRepoWriteClass: broker-denied-http-403
+  writeChildDidNotRun: true
+
+lifecycle:
+  restart: pass
+  recreate: pass
+  staleBindingsClearedByNativeLifecycle: true
+  noCoderOrchestrationInsideDevContainer: true
+
+claims:
+  - "signed RC handoff verified inside the Dev Container before rc-pade bind"
+  - "exact verified Profile bytes handed to rc-pade bind"
+  - "native Dev Container Feature lifecycle used; no Coder sync primitives"
+  - "GCE metadata identity reachable from inside the Dev Container on default networking"
+  - "live broker authorized github.repo.read and denied github.repo.write"
+  - "restart and fresh recreate regenerated the trusted live path"
+
+limitations:
+  - "verifier → workspace-local verified Profile → later rc-pade reopen is orchestration ordering, not a tamper-resistant security boundary"
+  - "experimental signed-handoff format is reused, not made normative"
+  - "Coder is the outer host only; this does not prove Codespaces/DevPod portability"

@@ -1,0 +1,26 @@
+experiment: "007"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  padeVersion: "v0.4.1"
+  padeCommit: "05fb036"
+  padeKsmFake: true
+  topology: docker-compose
+
+observations:
+  workspaceAmbientMaterialAbsent: true
+  workspacePadeChildMaterialPresent: true
+  sidecarMaterialAbsent: true
+  sidecarWorkspaceMountAbsent: true
+  composeProject: devcontainer
+
+claims:
+  - "workspace Material behavior isolated to PADE child"
+  - "sidecar Material absence"
+  - "sidecar workspace-mount absence"
+
+limitations:
+  - "additional Coder-host provenance only"
+  - "host-specific container IDs not recorded"

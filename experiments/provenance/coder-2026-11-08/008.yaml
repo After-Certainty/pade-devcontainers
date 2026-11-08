@@ -1,0 +1,24 @@
+experiment: "008"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  featureId: pade
+  persistentVolume: pade-exp008-state
+
+observations:
+  firstCreate: pass
+  restartContainerReused: true
+  restartStaleBindingsCleared: true
+  recreateContainerChanged: true
+  persistentVolumeStaleBindingsCleared: true
+
+claims:
+  - "first create initializes fail-closed bindings"
+  - "same-container restart clears stale persistent bindings via postStart"
+  - "fresh recreate with persistent volume clears stale bindings"
+
+limitations:
+  - "additional Coder-host provenance only"
+  - "host-specific container IDs not recorded"

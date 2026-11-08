@@ -1,0 +1,24 @@
+experiment: "003"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  rcDemosCommit: "853eab3c2c04f9d1059b2dbd64ea91996828a3a9"
+
+observations:
+  applicationProfileUnchanged: true
+  compositionProvenance: pass
+  applicationConditions: "content-api,site-analytics"
+  composedConditions: "content-api,site-analytics,application-source"
+
+artifacts:
+  applicationProfileSha256: "1175152793691ad5812b873019adb18f3f98eeb68cdd7a7670c137c2ad298c4e"
+
+claims:
+  - "application Profile bytes remained unchanged"
+  - "wrapper-owned source-control demand appeared only in composed Profile"
+
+limitations:
+  - "does not prove trusted handoff"
+  - "additional Coder-host provenance only"

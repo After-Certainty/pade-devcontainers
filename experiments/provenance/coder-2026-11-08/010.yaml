@@ -1,0 +1,25 @@
+experiment: "010"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  registry: "localhost:5000"
+  namespace: "after-certainty/pade-devcontainers"
+  disposableLocalRegistry: true
+
+observations:
+  packageMetadata: pass
+  publishedDigest: "sha256:4537be61e8184691ea75cd8a266a19b9137076a0e8cd6f4f108cff234bda4869"
+  ociManifest: pass
+  cleanConsumerLocalSourceAbsent: true
+  distributedFeatureInstall: pass
+
+claims:
+  - "Feature packaged and published to disposable local OCI registry"
+  - "clean consumer installed Feature by canonical digest"
+  - "no permanent public Feature release was published"
+
+limitations:
+  - "additional Coder-host provenance only"
+  - "local registry only; not a public distribution proof"

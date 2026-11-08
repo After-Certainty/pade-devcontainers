@@ -1,0 +1,23 @@
+experiment: "004"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  rcPadeCommit: "43226ef96ae09419b6253a6eb364fd44a0ac1305"
+
+observations:
+  supportedRequired: projected_required
+  supportedOptional: projected_optional
+  unsupportedRequired: fail_closed
+  unsupportedOptional: fail_closed
+
+claims:
+  - "supported + required → projected required"
+  - "supported + optional → projected optional"
+  - "unsupported + required → fail closed"
+  - "unsupported + optional → currently also fail closed"
+
+limitations:
+  - "preserves current optional-unsupported finding; does not preempt upstream conditions[].optional discussion"
+  - "additional Coder-host provenance only"

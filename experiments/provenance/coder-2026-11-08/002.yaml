@@ -1,0 +1,30 @@
+experiment: "002"
+status: pass
+host: coder
+commitUnderTest: "abecd7742bf37f15aa5b85cb3cac23f0d6b4b6cb"
+
+inputs:
+  baseImages:
+    - ubuntu:24.04
+    - debian:bookworm-slim
+  featureId: pade
+  featureVersion: "0.1.0"
+  devcontainersCli: "0.90.0"
+
+observations:
+  ubuntu2404: pass
+  debianBookwormSlim: pass
+  initHelperInstalled: true
+  bindHelperInstalled: true
+  rcPadeNotBundledByFeature: true
+  failClosedBindingsMode0600: true
+  bindWithoutRcPadeExit: 127
+
+claims:
+  - "reusable Feature installs lifecycle helpers on supported clean base images"
+  - "Feature does not install rc-pade or PADE"
+  - "fail-closed empty bindings mode 0600 held"
+
+limitations:
+  - "additional Coder-host provenance only; does not expand Feature semantics"
+  - "does not prove live broker authorization"
