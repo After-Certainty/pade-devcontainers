@@ -6,12 +6,22 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 CONFIG="$ROOT/experiments/008-lifecycle-stale-state/.devcontainer/devcontainer.json"
 VOLUME="pade-exp008-state"
+STAGED_FEATURE="$ROOT/experiments/008-lifecycle-stale-state/.devcontainer/features/pade"
+
+rm -rf "$STAGED_FEATURE"
+mkdir -p "$STAGED_FEATURE"
+cp "$ROOT/src/pade/devcontainer-feature.json" "$STAGED_FEATURE/devcontainer-feature.json"
+cp "$ROOT/src/pade/install.sh" "$STAGED_FEATURE/install.sh"
+chmod 0755 "$STAGED_FEATURE/install.sh"
+cmp "$ROOT/src/pade/devcontainer-feature.json" "$STAGED_FEATURE/devcontainer-feature.json"
+cmp "$ROOT/src/pade/install.sh" "$STAGED_FEATURE/install.sh"
 
 cleanup() {
   if [[ -n "${last_container:-}" ]]; then
     docker rm -f "$last_container" >/dev/null 2>&1 || true
   fi
   docker volume rm -f "$VOLUME" >/dev/null 2>&1 || true
+  rm -rf "$STAGED_FEATURE"
 }
 trap cleanup EXIT
 
