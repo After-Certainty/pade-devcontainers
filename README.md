@@ -52,7 +52,12 @@ This repository must not:
 
 See [experiments/](experiments/).
 
-Experiment 001 asks whether a standard Dev Container can consume the same verified-Profile → rc-pade bind → PADE boundary proven in Coder, without any Coder-specific lifecycle machinery.
+The current experiment sequence is:
+
+- **001** — prove the post-trust rc-pade binding path executes inside a standard Dev Container.
+- **002** — package the environment lifecycle adapter as a reusable native Dev Container Feature.
+- **003** — run the real Runtime Conditions composer and keep application demand separate from wrapper-owned Dev Container demand.
+- **004** — make required/optional and supported/unsupported behavior observable at the rc-pade platform-support boundary.
 
 ## CI
 
@@ -64,5 +69,7 @@ GitHub Actions verifies the deterministic part of Experiment 001 on every push a
 4. run rc-pade bind inside that Dev Container against the composed dev-container Profile fixture;
 5. verify the expected GitHub read/write broker bindings;
 6. exercise an allowlist failure and confirm bindings are replaced with capabilities: {}.
+
+Additional CI jobs demonstrate Experiments 002–004 independently: Feature tests across clean base images, real pinned RC composition, and a four-case support/optionality matrix.
 
 CI deliberately does **not** claim to prove the later live checkpoints: signed-handoff trust, cloud workload identity, broker authorization, or provider fulfillment. Those require explicit provenance from the live experiment.
