@@ -1,0 +1,69 @@
+name: Experiment 001
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "docs/**"
+      - "feat/**"
+
+permissions:
+  contents: read
+
+env:
+  RC_PADE_COMMIT: 43226ef96ae09419b6253a6eb364fd44a0ac1305
+  DEVCONTAINER_CLI_VERSION: 0.90.0
+
+jobs:
+  repository-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install contract tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Verify experiment contract
+        run: bash scripts/ci/verify-repository.sh
+
+  devcontainer-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.10"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Dev Containers CLI
+        run: |
+          npm install --global "@devcontainers/cli@${DEVCONTAINER_CLI_VERSION}"
+          devcontainer --version
+
+      - name: Build pinned rc-pade
+        run: |
+          set -euo pipefail
+          mkdir -p .work/src .work/bin
+          curl -fsSL --retry 2             -o .work/rc-pade.tar.gz             "https://github.com/After-Certainty/rc-pade/archive/${RC_PADE_COMMIT}.tar.gz"
+          tar -C .work/src -xzf .work/rc-pade.tar.gz
+          RC_PADE_DIR="$(find .work/src -mindepth 1 -maxdepth 1 -type d -name 'rc-pade-*' | head -n1)"
+          test -n "$RC_PADE_DIR"
+          (
+            cd "$RC_PADE_DIR"
+            CGO_ENABLED=0 go build -trimpath               -o "$GITHUB_WORKSPACE/.work/bin/rc-pade"               ./cmd/rc-pade
+          )
+          .work/bin/rc-pade bind --help >/dev/null
+
+      - name: Start Dev Container
+        run: devcontainer up --workspace-folder "$GITHUB_WORKSPACE"
+
+      - name: Run Experiment 001 smoke inside Dev Container
+        run: |
+          devcontainer exec             --workspace-folder "$GITHUB_WORKSPACE"             bash experiments/001-verified-rc-pade/scripts/verify-bind.sh
